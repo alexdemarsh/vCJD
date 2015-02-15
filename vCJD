@@ -1,0 +1,332 @@
+incub <- read.table("../Baseline-results-subset.csv", header=T, sep = ",")
+age <- read.table("../age-subset.csv", header=T, sep = ",")
+
+# Function to compute probability and CI ----
+prob <- function (a, b, data) {
+    pr <- vector("numeric", nrow(data))
+    for (i in 1:nrow(data)) {
+        row <- data[i,]
+        pr[[i]] <- pgamma(q = a, shape = row$shape, scale= row$scale) - pgamma(q = b, shape = row$shape, scale = row$scale)
+    }
+    pr <- sort(pr)
+    CI <- vector ("numeric", 2)
+    CI[1] <- pr[50]
+    CI[2] <- pr[1958]
+    print(median(pr))
+    print(CI)
+}
+
+# Incubation period only, ungrouped ----
+## Case 1 ---
+Case1_SAU1 <- prob(4.5, 0.0001, incub)
+Case1_USA <- prob(5.5, 4.5, incub)
+Case1_SAU2 <- prob(32, 5.5, incub)
+
+## Case 2 ---
+Case2_USA <- prob(0.06, 0, incub)
+Case2_EGY <- prob(7.2, 0.6, incub)
+Case2_SAU <- prob(22.8, 7.2, incub)
+
+## Case 3 ---
+Case3_ARE1 <- prob(0.4, 0.0001, incub)
+Case3_USA <- prob(2.6, 0.4, incub)
+Case3_BGD <- prob(6.6, 2.6, incub)
+Case3_ARE2 <- prob(10.6, 6.6, incub)
+Case3_SAU <- prob(23, 10.6, incub)
+
+# Age only, ungrouped ----
+## Case 1 ---
+Case1_SAU1 <- prob(32.5, 28.3, age)
+Case1_USA <- prob(28.3, 27.25, age)
+Case1_SAU2 <- prob(27.25, 0.0001, age)
+
+## Case 2 ---
+Case2_USA <- prob(22.8, 22.5, age)
+Case2_EGY <- prob(22.5, 16, age)
+Case2_SAU <- prob(16, 0.0001, age)
+
+## Case 3 ---
+Case3_ARE1 <- prob(23, 22.6, age)
+Case3_USA <- prob(22.6, 20.4, age)
+Case3_BGD <- prob(20.4, 16.4, age)
+Case3_ARE2 <- prob(16.4, 12.4, age)
+Case3_SAU <- prob(12.4, 0.0001, age)
+
+
+# Function to compute probability and CI when multiple periods covered----
+prob.mult <- function (num.ranges, ranges, data) {
+    tot.pr <- matrix(nrow = nrow(data), ncol = num.ranges)
+    for (i in 1:num.ranges){
+        pr <- vector("numeric", nrow(data))
+        for (j in 1:nrow(data)) {
+            row <- data[j,]
+            pr[[j]] <- pgamma(q = ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }
+        tot.pr[,i] <- pr
+    }
+    sorted.pr <- sort(rowSums(tot.pr))
+    CI <- vector ("numeric", 2)
+    CI[1] <- sorted.pr[50]
+    CI[2] <- sorted.pr[1958]    
+    print(median(sorted.pr))
+    print(CI)
+}
+
+# Function to compute probability and CI when multiple periods with travel ----
+prob.mult.sub <- function (num.ranges, ranges, num.sub, sub, data){
+    tot.pr <- matrix(nrow = nrow(data), ncol = num.ranges + num.sub)
+    for (i in 1:num.ranges){
+        pr <- vector("numeric", nrow(data))
+        for (j in 1:nrow(data)) {
+            row <- data[j,]
+            pr[[j]] <- pgamma(q = ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }        
+        tot.pr[,i] <- pr
+    }
+    for (a in 1:num.sub){
+        sub.pr <- vector("numeric", nrow(data))
+        for (b in 1:nrow(data)) {
+            row <- data[b,]
+            sub.pr[[b]] <- pgamma(q = sub[[a]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = sub[[a]][2], shape = row$shape, scale = row$scale)
+        }
+        sub.pr <- -1 * (sub.pr)
+        tot.pr[,i+a] <- sub.pr
+    }
+    sorted.pr <- sort(rowSums(tot.pr))
+    CI <- vector ("numeric", 2)
+    CI[1] <- sorted.pr[50]
+    CI[2] <- sorted.pr[1958] 
+    print(median(sorted.pr))
+    print(CI)
+}
+
+# Incubation with travel history ----
+## Case 1 ---
+Case1_T_USA_ranges <- vector("list", 1)
+Case1_T_USA_ranges[[1]] <- c(5.5, 4.5)
+Case1_T_USA_sub <- vector("list", 1)
+Case1_T_USA_sub[[1]] <- c(6, 5.99)
+Case1_T_USA <- prob.mult.sub(1, Case1_T_USA_ranges, 1, Case1_T_USA_sub, incub)
+
+Case1_T_SAU_ranges <- vector("list", 2)
+Case1_T_SAU_ranges[[1]] <- c(4.5, 0.0001)
+Case1_T_SAU_ranges[[2]] <- c(32, 5.5)
+Case1_T_SAU_sub <- vector("list", 1)
+Case1_T_SAU_sub[[1]] <- c(8, 7.96)
+Case1_T_SAU <- prob.mult.sub(2, Case1_T_SAU_ranges, 1, Case1_T_SAU_sub, incub)
+
+Case1_T_UK <- prob(6, 5.99, incub)
+
+Case1_T_FR <- prob(8, 7.96, incub)
+
+## Case 2 ---
+Case2_T_USA1_ranges <- vector("list", 4)
+Case2_T_USA1_ranges[[1]] <- c(2, 1.753)
+Case2_T_USA1_ranges[[2]] <- c(3, 2.753)
+Case2_T_USA1_ranges[[3]] <- c(4, 3.753)
+Case2_T_USA1_ranges[[4]] <- c(5, 4.753)
+Case2_T_USA1 <- prob.mult(4, Case2_T_USA1_ranges, incub)
+
+Case2_T_EGY_ranges <- vector("list", 1)
+Case2_T_EGY_ranges[[1]] <- c(7.2, 0.6)
+Case2_T_EGY_sub <- vector("list", 4)
+Case2_T_EGY_sub[[1]] <- c(2, 1.753)
+Case2_T_EGY_sub[[2]] <- c(3, 2.753)
+Case2_T_EGY_sub[[3]] <- c(4, 3.753)
+Case2_T_EGY_sub[[4]] <- c(5, 4.753)
+Case2_T_EGY <- prob.mult.sub(1, Case2_T_EGY_ranges, 4, Case2_T_EGY_sub, incub)
+
+Case2_T_SAU_ranges <- vector("list", 1)
+Case2_T_SAU_ranges[[1]] <- c(22.8, 7.2)
+Case2_T_SAU_sub <- vector("list", 1)
+Case2_T_SAU_sub[[1]] <- c(17, 16.8767)
+Case2_Tl_SAU <- prob.mult.sub(1, Case2_T_SAU_ranges, 1, Case2_T_SAU_sub, incub)
+
+Case2_T_USA2 <- prob(17, 16.8767, incub)
+
+
+## Case 3 ---
+Case3_T_USA_ranges <- vector("list", 1)
+Case3_T_USA_ranges[[1]] <- c(2.6, 0.4) 
+Case3_T_USA_sub <- vector("list", 2)
+Case3_T_USA_sub[[1]] <- c(0.5, 0.4233)
+Case3_T_USA_sub[[2]] <- c(0.5, 0.4233)
+Case3_T_USA <- prob.mult.sub(1, Case3_T_USA_ranges, 2, Case3_T_USA_sub, incub)
+
+Case3_T_BGD1 <- prob(6.6, 2.6, incub)
+
+Case3_T_ARE_ranges <- vector("list", 2)
+Case3_T_ARE_ranges[[1]] <- c(0.4, 0.0001)
+Case3_T_ARE_ranges[[2]] <- c(10.6, 6.6)
+Case3_T_ARE_sub <- vector("list", 5)
+Case3_T_ARE_sub[[1]] <- c(7, 6.981)
+Case3_T_ARE_sub[[2]] <- c(7.5, 7.236)
+Case3_T_ARE_sub[[3]] <- c(8.5, 8.236)
+Case3_T_ARE_sub[[4]] <- c(9.5,9.236)
+Case3_T_ARE_sub[[5]] <- c(10.5, 10.236)
+Case3_T_ARE <- prob.mult.sub(2, Case3_T_ARE_ranges, 5, Case3_T_ARE_sub, incub)
+
+Case3_T_SAU_ranges <- vector("list", 1)
+Case3_T_SAU_ranges[[1]] <- c(23, 10.6)
+Case3_T_SAU_sub <- vector("list", 12)
+Case3_T_SAU_sub[[1]] <- c(11.5, 11.236)
+Case3_T_SAU_sub[[2]] <- c(12.5, 12.236)
+Case3_T_SAU_sub[[3]] <- c(13.5, 13.236)
+Case3_T_SAU_sub[[4]] <- c(14.5, 14.236)
+Case3_T_SAU_sub[[5]] <- c(15.5,15.236)
+Case3_T_SAU_sub[[6]] <- c(16.5, 16.236)
+Case3_T_SAU_sub[[7]] <- c(17.5, 17.236)
+Case3_T_SAU_sub[[8]] <- c(18.5, 18.236)
+Case3_T_SAU_sub[[9]] <- c(19.5, 19.236)
+Case3_T_SAU_sub[[10]] <- c(20.5, 20.236)
+Case3_T_SAU_sub[[11]] <- c(21.5, 21.254)
+Case3_T_SAU_sub[[12]] <- c(22.5, 22.253)
+Case3_T_SAU <- prob.mult.sub(1, Case3_T_SAU_ranges, 12, Case3_T_SAU_sub, incub)
+
+Case3_T_UK1_ranges <- vector("list", 2)
+Case3_T_UK1_ranges[[1]] <- c(0.5, 0.4233) 
+Case3_T_UK1_ranges[[2]] <- c(0.5, 0.4233)
+Case3_T_UK1 <- prob.mult(2, Case3_T_UK1_ranges, incub)
+
+Case3_T_FR <- prob(7, 6.981, incub)
+
+Case3_T_BGD2_ranges <- vector("list", 4)
+Case3_T_BGD2_ranges[[1]] <- c(7.5, 7.236) 
+Case3_T_BGD2_ranges[[2]] <- c(8.5, 8.236)
+Case3_T_BGD2_ranges[[3]] <- c(9.5, 9.236)
+Case3_T_BGD2_ranges[[4]] <- c(10.5, 10.236)
+Case3_T_BGD2 <- prob.mult(4, Case3_T_BGD2_ranges, incub)
+
+Case3_T_UK2 <- prob(14, 13.9617, incub)
+
+Case3_T_BGD3_ranges <- vector("list", 12)
+Case3_T_BGD3_ranges[[1]] <- c(11.5, 11.236)
+Case3_T_BGD3_ranges[[2]] <- c(12.5, 12.236)
+Case3_T_BGD3_ranges[[3]] <- c(13.5, 13.236)
+Case3_T_BGD3_ranges[[4]] <- c(14.5, 14.236)
+Case3_T_BGD3_ranges[[5]] <- c(15.5,15.236)
+Case3_T_BGD3_ranges[[6]] <- c(16.5, 16.236)
+Case3_T_BGD3_ranges[[7]] <- c(17.5, 17.236)
+Case3_T_BGD3_ranges[[8]] <- c(18.5, 18.236)
+Case3_T_BGD3_ranges[[9]] <- c(19.5, 19.236)
+Case3_T_BGD3_ranges[[10]] <- c(20.5, 20.236)
+Case3_T_BGD3_ranges[[11]] <- c(21.5, 21.254)
+Case3_T_BGD3_ranges[[12]] <- c(22.5, 22.253)
+Case3_T_BGD3_ranges <- prob.mult(12, Case3_T_BGD3_ranges, incub)
+
+# Age with travel history ----
+## Case 1 ---
+Case1_T_Age_USA_ranges <- vector("list", 1)
+Case1_T_Age_USA_ranges[[1]] <- c(28.3, 27.25)
+Case1_T_Age_USA_sub <- vector("list", 1)
+Case1_T_Age_USA_sub[[1]] <- c(27, 26.99)
+Case1_T_Age_USA <- prob.mult.sub(1, Case1_T_Age_USA_ranges, 1, Case1_T_Age_USA_sub, age)
+
+Case1_T_Age_SAU_ranges <- vector("list", 2)
+Case1_T_Age_SAU_ranges[[1]] <- c(32.5, 28.3)
+Case1_T_Age_SAU_ranges[[2]] <- c(27.25, 0.001)
+Case1_T_Age_SAU_sub <- vector("list", 1)
+Case1_T_Age_SAU_sub[[1]] <- c(25, 24.96)
+Case1_T_Age_SAU <- prob.mult.sub(2, Case1_T_Age_SAU_ranges, 1, Case1_T_Age_SAU_sub, age)
+
+Case1_T_Age_UK <- prob(27, 26.99, age)
+
+Case1_T_Age_FR <- prob(25, 24.96, age)
+
+## Case 2 ---
+Case2_T_Age_USA1_ranges <- vector("list", 4)
+Case2_T_Age_USA1_ranges[[1]] <- c(21, 20.753)
+Case2_T_Age_USA1_ranges[[2]] <- c(20, 19.753)
+Case2_T_Age_USA1_ranges[[3]] <- c(19, 18.753)
+Case2_T_Age_USA1_ranges[[4]] <- c(18, 17.753)
+Case2_T_Age_USA1 <- prob.mult(4, Case2_T_Age_USA1_ranges, age)
+
+Case2_T_Age_EGY_ranges <- vector("list", 1)
+Case2_T_Age_EGY_ranges[[1]] <- c(22.5, 16)
+Case2_T_Age_EGY_sub <- vector("list", 4)
+Case2_T_Age_EGY_sub[[1]] <- c(21, 20.753)
+Case2_T_Age_EGY_sub[[2]] <- c(20, 19.753)
+Case2_T_Age_EGY_sub[[3]] <- c(19, 18.753)
+Case2_T_Age_EGY_sub[[4]] <- c(18, 17.753)
+Case2_T_Age_EGY <- prob.mult.sub(1, Case2_T_Age_EGY_ranges, 4, Case2_T_Age_EGY_sub, age)
+
+Case2_T_Age_SAU_ranges <- vector("list", 1)
+Case2_T_Age_SAU_ranges[[1]] <- c(16, 0.001)
+Case2_T_Age_SAU_sub<- vector("list", 1)
+Case2_T_Age_SAU_sub[[1]] <- c(6,5.8767)
+Case2_T_Age_SAU <- prob.mult.sub(1, Case2_T_Age_SAU_ranges, 1, Case2_T_Age_SAU_sub, age)
+
+Case2_T_Age_USA2 <- prob(6,5.8767, age)
+
+## Case 3 ---
+Case3_T_Age_USA_ranges <- vector("list", 1)
+Case3_T_Age_USA_ranges[[1]] <- c(22.6, 20.4)
+Case3_T_Age_USA_sub <- vector("list", 2)
+Case3_T_Age_USA_sub[[1]] <- c(19.5, 19.4233)
+Case3_T_Age_USA_sub[[2]] <- c(19.5, 19.4233)
+Case3_T_Age_USA <- prob.mult.sub(1, Case3_T_Age_USA_ranges, 2, Case3_T_Age_USA_sub, age)
+
+Case3_T_Age_BGD1 <- prob(20.4, 16.4, age)
+
+Case3_T_Age_ARE_ranges <- vector("list", 2)
+Case3_T_Age_ARE_ranges[[1]] <- c(19.5, 19.4233)
+Case3_T_Age_ARE_ranges[[2]] <- c(16.4, 12.4)
+Case3_T_Age_ARE_sub <- vector("list",5)
+Case3_T_Age_ARE_sub[[1]] <- c(16, 15.981)
+Case3_T_Age_ARE_sub[[2]] <- c(15.5, 15.236)
+Case3_T_Age_ARE_sub[[3]] <- c(14.5, 14.236)
+Case3_T_Age_ARE_sub[[4]] <- c(13.5,13.236)
+Case3_T_Age_ARE_sub[[5]] <- c(12.5, 12.236)
+Case3_T_Age_ARE <- prob.mult.sub(2, Case3_T_Age_ARE_ranges, 5, Case3_T_Age_ARE_sub, age)
+
+Case3_T_Age_SAU_ranges <- vector("list", 1)
+Case3_T_Age_SAU_ranges[[1]] <- c(12.4, 0.0001)
+Case3_T_Age_SAU_sub <- vector("list", 13)
+Case3_T_Age_SAU_sub[[1]] <- c(11.5, 11.236)
+Case3_T_Age_SAU_sub[[2]] <- c(10.5, 10.236)
+Case3_T_Age_SAU_sub[[3]] <- c(9.5, 9.236)
+Case3_T_Age_SAU_sub[[4]] <- c(8.5, 8.236)
+Case3_T_Age_SAU_sub[[5]] <- c(7.5,7.236)
+Case3_T_Age_SAU_sub[[6]] <- c(6.5, 6.236)
+Case3_T_Age_SAU_sub[[7]] <- c(5.5, 5.236)
+Case3_T_Age_SAU_sub[[8]] <- c(4.5, 4.236)
+Case3_T_Age_SAU_sub[[9]] <- c(3.5, 3.236)
+Case3_T_Age_SAU_sub[[10]] <- c(2.5, 2.236)
+Case3_T_Age_SAU_sub[[11]] <- c(1.5, 1.254)
+Case3_T_Age_SAU_sub[[12]] <- c(0.5, 0.253)
+Case3_T_Age_SAU_sub[[13]] <- c(9, 8.9617)
+Case3_T_Age_SAU <- prob.mult.sub(1, Case3_T_Age_SAU_ranges, 13, Case3_T_Age_SAU_sub, age)
+
+Case3_T_Age_UK1_ranges <- vector("list", 2)
+Case3_T_Age_UK1_ranges[[1]] <- c(19.5, 19.4233)
+Case3_T_Age_UK1_ranges[[2]] <- c(19.5, 19.4233)
+Case3_T_Age_UK1 <- prob.mult(2, Case3_T_Age_UK1_ranges, age)
+
+Case3_T_Age_FR <- prob(16, 15.981, age)
+
+Case3_T_Age_BGD2_ranges <- vector("list", 4)
+Case3_T_Age_BGD2_ranges[[1]] <- c(15.5, 15.236)
+Case3_T_Age_BGD2_ranges[[2]] <- c(14.5, 14.236)
+Case3_T_Age_BGD2_ranges[[3]] <- c(13.5,13.236)
+Case3_T_Age_BGD2_ranges[[4]] <- c(12.5, 12.236)
+Case3_T_Age_BGD2 <- prob.mult(4, Case3_T_Age_BGD2_ranges, age)
+
+Case3_T_Age_UK2 <- prob(9, 8.9617, age)
+
+Case3_T_Age_BGD3_ranges <- vector("list", 12)
+Case3_T_Age_BGD3_ranges[[1]] <- c(11.5, 11.236)
+Case3_T_Age_BGD3_ranges[[2]] <- c(10.5, 10.236)
+Case3_T_Age_BGD3_ranges[[3]] <- c(9.5, 9.236)
+Case3_T_Age_BGD3_ranges[[4]] <- c(8.5, 8.236)
+Case3_T_Age_BGD3_ranges[[5]] <- c(7.5,7.236)
+Case3_T_Age_BGD3_ranges[[6]] <- c(6.5, 6.236)
+Case3_T_Age_BGD3_ranges[[7]] <- c(5.5, 5.236)
+Case3_T_Age_BGD3_ranges[[8]] <- c(4.5, 4.236)
+Case3_T_Age_BGD3_ranges[[9]] <- c(3.5, 3.236)
+Case3_T_Age_BGD3_ranges[[10]] <- c(2.5, 2.236)
+Case3_T_Age_BGD3_ranges[[11]] <- c(1.5, 1.254)
+Case3_T_Age_BGD3_ranges[[12]] <- c(0.5, 0.253)
+Case3_T_Age_BGD3 <- prob.mult(12, Case3_T_Age_BGD3_ranges, age)
