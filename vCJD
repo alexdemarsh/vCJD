@@ -1,5 +1,5 @@
-incub <- read.table("/PATH/Baseline-results-subset.csv", header=T, sep = ",")
-age <- read.table("/PATH/age-subset.csv", header=T, sep = ",")
+incub <- read.table("/home/alexd/Desktop/CJD/Baseline-results-subset.csv", header=T, sep = ",")
+age <- read.table("/home/alexd/Desktop/CJD/age-subset.csv", header=T, sep = ",")
 
 # Function to compute probability and CI ----
 prob <- function (a, b, data) {
@@ -213,9 +213,29 @@ Case3_T_BGD3_ranges[[7]] <- c(17.5, 17.236)
 Case3_T_BGD3_ranges[[8]] <- c(18.5, 18.236)
 Case3_T_BGD3_ranges[[9]] <- c(19.5, 19.236)
 Case3_T_BGD3_ranges[[10]] <- c(20.5, 20.236)
-Case3_T_BGD3_ranges[[11]] <- c(21.5, 21.254)
-Case3_T_BGD3_ranges[[12]] <- c(22.5, 22.253)
-Case3_T_BGD3_ranges <- prob.mult(12, Case3_T_BGD3_ranges, incub)
+Case3_T_BGD3_ranges[[11]] <- c(21.5, 21.236)
+Case3_T_BGD3_ranges[[12]] <- c(22.5, 22.236)
+Case3_T_BGD3 <- prob.mult(12, Case3_T_BGD3_ranges, incub)
+
+Case3_T_BGD_all_ranges <- vector("list", 2)
+Case3_T_BGD_all_ranges[[1]] <- c(6.6, 2.6)
+Case3_T_BGD_all_ranges[[2]] <- c(7.5, 7.236) 
+Case3_T_BGD_all_ranges[[3]] <- c(8.5, 8.236)
+Case3_T_BGD_all_ranges[[4]] <- c(9.5, 9.236)
+Case3_T_BGD_all_ranges[[5]] <- c(10.5, 10.236)
+Case3_T_BGD_all_ranges[[6]] <- c(11.5, 11.236)
+Case3_T_BGD_all_ranges[[7]] <- c(12.5, 12.236)
+Case3_T_BGD_all_ranges[[8]] <- c(13.5, 13.236)
+Case3_T_BGD_all_ranges[[9]] <- c(14.5, 14.236)
+Case3_T_BGD_all_ranges[[10]] <- c(15.5,15.236)
+Case3_T_BGD_all_ranges[[11]] <- c(16.5, 16.236)
+Case3_T_BGD_all_ranges[[12]] <- c(17.5, 17.236)
+Case3_T_BGD_all_ranges[[13]] <- c(18.5, 18.236)
+Case3_T_BGD_all_ranges[[14]] <- c(19.5, 19.236)
+Case3_T_BGD_all_ranges[[15]] <- c(20.5, 20.236)
+Case3_T_BGD_all_ranges[[16]] <- c(21.5, 21.236)
+Case3_T_BGD_all_ranges[[17]] <- c(22.5, 22.236)
+Case3_T_BGD_all <- prob.mult(2, Case3_T_BGD_all_ranges, incub)
 
 # Age with travel history ----
 ## Case 1 ---
@@ -333,6 +353,27 @@ Case3_T_Age_BGD3 <- prob.mult(12, Case3_T_Age_BGD3_ranges, age)
 
 
 
+Case3_T_Age_BGD_all_ranges <- vector("list", 17)
+Case3_T_Age_BGD_all_ranges[[1]] <- c(15.5, 15.236)
+Case3_T_Age_BGD_all_ranges[[2]] <- c(14.5, 14.236)
+Case3_T_Age_BGD_all_ranges[[3]] <- c(13.5,13.236)
+Case3_T_Age_BGD_all_ranges[[4]] <- c(12.5, 12.236)
+Case3_T_Age_BGD_all_ranges[[5]] <- c(11.5, 11.236)
+Case3_T_Age_BGD_all_ranges[[6]] <- c(10.5, 10.236)
+Case3_T_Age_BGD_all_ranges[[7]] <- c(9.5, 9.236)
+Case3_T_Age_BGD_all_ranges[[8]] <- c(8.5, 8.236)
+Case3_T_Age_BGD_all_ranges[[9]] <- c(7.5,7.236)
+Case3_T_Age_BGD_all_ranges[[10]] <- c(6.5, 6.236)
+Case3_T_Age_BGD_all_ranges[[11]] <- c(5.5, 5.236)
+Case3_T_Age_BGD_all_ranges[[12]] <- c(4.5, 4.236)
+Case3_T_Age_BGD_all_ranges[[13]] <- c(3.5, 3.236)
+Case3_T_Age_BGD_all_ranges[[14]] <- c(2.5, 2.236)
+Case3_T_Age_BGD_all_ranges[[15]] <- c(1.5, 1.254)
+Case3_T_Age_BGD_all_ranges[[16]] <- c(0.5, 0.253)
+Case3_T_Age_BGD_all_ranges[[17]] <- c(20.4, 16.4)
+Case3_T_Age_BGD_all <- prob.mult(17, Case3_T_Age_BGD_all_ranges, age)
+
+
 
 # Incubation, global risk period, and travel history ----
 ## Case 1 ---
@@ -368,10 +409,9 @@ Case3_G_SAU_sub[[8]] <- c(20.5, 20.236)
 Case3_G_SAU_sub[[9]] <- c(21.5, 21.254)
 Case3_G_SAU_sub[[10]] <- c(22.5, 22.253)
 Case3_G_SAU_sub[[11]] <- c(14, 13.9617)
-Case3_G_SAU <- prob.mult.sub(1, Case3_G_SAU_ranges, 10, Case3_G_SAU_sub, incub)
+Case3_G_SAU <- prob.mult.sub(1, Case3_G_SAU_ranges, 11, Case3_G_SAU_sub, incub)
 
 Case3_G_UK <- prob(14, 13.9617, incub)
-
 
 Case3_G_BGD_ranges <- vector("list", 10)
 Case3_G_BGD_ranges[[1]] <- c(13.5, 13.253)
@@ -384,8 +424,7 @@ Case3_G_BGD_ranges[[7]] <- c(19.5, 19.236)
 Case3_G_BGD_ranges[[8]] <- c(20.5, 20.236)
 Case3_G_BGD_ranges[[9]] <- c(21.5, 21.254)
 Case3_G_BGD_ranges[[10]] <- c(22.5, 22.253)
-Case3_G_BGD <- prob.mult(9, Case3_G_BGD_ranges, incub)
-
+Case3_G_BGD <- prob.mult(10, Case3_G_BGD_ranges, incub)
 
 
 # Age, global risk period, and travel history ----
@@ -421,8 +460,8 @@ Case3_G_SAU_sub[[7]] <- c(3.5, 3.236)
 Case3_G_SAU_sub[[8]] <- c(2.5, 2.236)
 Case3_G_SAU_sub[[9]] <- c(1.5, 1.254)
 Case3_G_SAU_sub[[10]] <- c(0.5, 0.253)
-Case3_T_Age_SAU_sub[[11]] <- c(9, 8.9617)
-Case3_G_SAU <- prob.mult.sub(1, Case3_G_SAU_ranges, 10, Case3_G_SAU_sub, age)
+Case3_G_SAU_sub[[11]] <- c(9, 8.9617)
+Case3_G_SAU <- prob.mult.sub(1, Case3_G_SAU_ranges, 11, Case3_G_SAU_sub, age)
 
 Case3_G_UK <- prob(9, 8.9617, age)
 
@@ -437,4 +476,91 @@ Case3_G_BGD_ranges[[7]] <- c(3.5, 3.236)
 Case3_G_BGD_ranges[[8]] <- c(2.5, 2.236)
 Case3_G_BGD_ranges[[9]] <- c(1.5, 1.254)
 Case3_G_BGD_ranges[[10]] <- c(0.5, 0.253)
-Case3_G_BGD <- prob.mult(9, Case3_G_BGD_ranges, age)
+Case3_G_BGD <- prob.mult(10, Case3_G_BGD_ranges, age)
+
+
+# Function to compute joint probability and CI when multiple periods with travel ----
+prob.mult.sub.joint <- function (num.ranges, num.sub, incub.ranges, incub.sub, 
+                           age.ranges, age.sub, incub.data, age.data){
+    tot.age.pr <- matrix(nrow = nrow(age.data), ncol = num.ranges + num.sub)
+    tot.incub.pr <- matrix(nrow = nrow(incub.data), ncol = num.ranges + num.sub)
+    for (i in 1:num.ranges){
+        age.pr <- vector("numeric", nrow(age.data))
+        for (j in 1:nrow(age.data)) {
+            row <- age.data[j,]
+            age.pr[[j]] <-  pgamma(q = age.ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                            pgamma(q = age.ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }        
+        tot.age.pr[,i] <- age.pr
+    }
+    for (a in 1:num.sub){
+        sub.age.pr <- vector("numeric", nrow(age.data))
+        for (b in 1:nrow(age.data)) {
+            row <- age.data[b,]
+            sub.age.pr[[b]] <-  pgamma(q = age.sub[[a]][1], shape = row$shape, scale= row$scale) - 
+                                pgamma(q = age.sub[[a]][2], shape = row$shape, scale = row$scale)
+        }
+        sub.age.pr <- -1 * (sub.age.pr)
+        tot.age.pr[,i+a] <- sub.age.pr
+    }
+    for (k in 1:num.ranges){
+        incub.pr <- vector("numeric", nrow(incub.data))
+        for (l in 1:nrow(incub.data)) {
+            row <- incub.data[l,]
+            incub.pr[[l]] <-    pgamma(q = incub.ranges[[k]][1], shape = row$shape, scale= row$scale) - 
+                                pgamma(q = incub.ranges[[k]][2], shape = row$shape, scale = row$scale)
+        }        
+        tot.incub.pr[,k] <- incub.pr
+    }
+    for (c in 1:num.sub){
+        sub.incub.pr <- vector("numeric", nrow(incub.data))
+        for (d in 1:nrow(incub.data)) {
+            row <- incub.data[d,]
+            sub.incub.pr[[d]] <-    pgamma(q = sub[[c]][1], shape = row$shape, scale= row$scale) - 
+                                    pgamma(q = sub[[c]][2], shape = row$shape, scale = row$scale)
+        }
+        sub.incub.pr <- -1 * (sub.incub.pr)
+        tot.incub.pr[,k + c] <- sub.incub.pr
+    }
+    joint.pr <- age.pr + incub.pr
+    joint.sub.pr <- sub.age.pr + incub.pr
+    
+    
+    
+    
+    sorted.incub.pr <- sort(rowSums(tot.incub.pr))
+    CI <- vector ("numeric", 2)
+    CI[1] <- sorted.pr[50]
+    CI[2] <- sorted.pr[1958] 
+    print(median(sorted.pr))
+    print(CI)
+}
+
+
+Case3_G_BGD_ranges <- vector("list", 10)
+Case3_G_BGD_ranges[[1]] <- c(9.5, 9.236)
+Case3_G_BGD_ranges[[2]] <- c(8.5, 8.236)
+Case3_G_BGD_ranges[[3]] <- c(7.5,7.236)
+Case3_G_BGD_ranges[[4]] <- c(6.5, 6.236)
+Case3_G_BGD_ranges[[5]] <- c(5.5, 5.236)
+Case3_G_BGD_ranges[[6]] <- c(4.5, 4.236)
+Case3_G_BGD_ranges[[7]] <- c(3.5, 3.236)
+Case3_G_BGD_ranges[[8]] <- c(2.5, 2.236)
+Case3_G_BGD_ranges[[9]] <- c(1.5, 1.254)
+Case3_G_BGD_ranges[[10]] <- c(0.5, 0.253)
+
+test.tot.age.pr <- matrix(nrow = nrow(age), ncol = 10)
+for (i in 1:10){
+    test.age.pr <- vector("numeric", nrow(age))
+    for (j in 1:nrow(age)) {
+        row <- age[j,]
+        test.age.pr[[j]] <-  pgamma(q = Case3_G_BGD_ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+            pgamma(q =Case3_G_BGD_ranges[[i]][2], shape = row$shape, scale = row$scale)
+    }        
+    test.tot.age.pr[,i] <- test.age.pr
+}
+head(test.tot.age.pr)
+head(test.age.pr)
+test.tot.age.pr[2,1]
+
+head(rowSums(test.tot.age.pr))
