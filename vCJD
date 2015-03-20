@@ -141,7 +141,7 @@ Case2_T_SAU_ranges <- vector("list", 1)
 Case2_T_SAU_ranges[[1]] <- c(22.8, 7.2)
 Case2_T_SAU_sub <- vector("list", 1)
 Case2_T_SAU_sub[[1]] <- c(17, 16.8767)
-Case2_Tl_SAU <- prob.mult.sub(1, Case2_T_SAU_ranges, 1, Case2_T_SAU_sub, incub)
+Case2_T_SAU <- prob.mult.sub(1, Case2_T_SAU_ranges, 1, Case2_T_SAU_sub, incub)
 
 Case2_T_USA2 <- prob(17, 16.8767, incub)
 
@@ -502,7 +502,8 @@ Case3_G_BGD_ranges[[9]] <- c(1.5, 1.254)
 Case3_G_BGD_ranges[[10]] <- c(0.5, 0.253)
 
 
-# Joint estimates, lifetime - might need to be sorted.
+# Joint estimates, lifetime ----
+## Case 1
 Case1_T_jt_denom <- rowSums(
     data.frame(Case1_T_FR[3], Case1_T_Age_FR[3], 
                Case1_T_UK[3], Case1_T_Age_UK[3],
@@ -516,22 +517,161 @@ Case1_T_SAU_jt_num <- rowSums(data.frame(Case1_T_SAU[3], Case1_T_Age_SAU[3]))
 Case1_T_USA_jt_num <- rowSums(data.frame(Case1_T_USA[3], Case1_T_Age_USA[3]))
 
 
-Case1_T_FR_jt <- Case1_T_FR_jt_num / Case1_T_jt_denom
+Case1_T_FR_jt <- sort(Case1_T_FR_jt_num / Case1_T_jt_denom)
 median(Case1_T_FR_jt)
 Case1_T_FR_jt[50]
 Case1_T_FR_jt[1958]
 
-Case1_T_UK_jt <- Case1_T_UK_jt_num / Case1_T_jt_denom
+Case1_T_UK_jt <- sort(Case1_T_UK_jt_num / Case1_T_jt_denom)
 median(Case1_T_UK_jt)
 Case1_T_UK_jt[50]
 Case1_T_UK_jt[1958]
 
-Case1_T_SAU_jt <- Case1_T_SAU_jt_num / Case1_T_jt_denom
+Case1_T_SAU_jt <- sort(Case1_T_SAU_jt_num / Case1_T_jt_denom)
 median(Case1_T_SAU_jt)
 Case1_T_SAU_jt[50]
 Case1_T_SAU_jt[1958]
 
-Case1_T_USA_jt <- Case1_T_USA_jt_num / Case1_T_jt_denom
+Case1_T_USA_jt <- sort(Case1_T_USA_jt_num / Case1_T_jt_denom)
 median(Case1_T_USA_jt)
 Case1_T_USA_jt[50]
 Case1_T_USA_jt[1958]
+
+
+## Case 2 - need 
+Case2_T_jt_denom <- rowSums( 
+    data.frame(Case2_T_EGY, Case2_T_Age_EG, 
+               Case2_T_SAU, Case2_T_Age_SAU,
+               Case2_T_USA, Case2_T_Age_USA))
+
+Case2_T_EGY_jt_num <- rowSums(data.frame(Case2_T_EGY[3], Case2_T_Age_EGY[3]))
+Case2_T_SAU_jt_num <- rowSums(data.frame(Case2_T_SAU[3], Case2_T_Age_SAU[3]))
+Case2_T_USA_jt_num <- rowSums(data.frame(Case2_T_USA[3], Case2_T_Age_USA[3]))
+
+Case2_T_EGY_jt <- sort(Case2_T_EGY_jt_num / Case2_T_jt_denom)
+median(Case1_T_EGY_jt)
+Case2_T_EGY_jt[50]
+Case2_T_EGY_jt[1958]
+
+Case2_T_SAU_jt <- sort(Case2_T_SAU_jt_num / Case2_T_jt_denom)
+median(Case2_T_SAU_jt)
+Case2_T_SAU_jt[50]
+Case2_T_SAU_jt[1958]
+
+Case2_T_USA_jt <- sort(Case2_T_USA_jt_num / Case2_T_jt_denom)
+median(Case2_T_USA_jt)
+Case2_T_USA_jt[50]
+Case2_T_USA_jt[1958]
+
+## Case 3
+Case3_T_jt_denom <- rowSums( 
+    data.frame(Case3_T_AE, Case3_T_Age_AE, 
+               Case3_T_BD, Case3_T_Age_BD
+               Case3_T_FR, Case3_T_Age_FR,
+               Case3_T_UK, Case3_T_Age_UK,
+               Case3_T_SAU, Case3_T_Age_SAU,
+               Case3_T_USA, Case3_T_Age_USA))
+
+Case3_T_AE_jt_num <- rowSums(data.frame(Case3_T_AE[3], Case3_T_Age_AE[3]))
+Case3_T_BD_jt_num <- rowSums(data.frame(Case3_T_BD[3], Case3_T_Age_BD[3]))
+Case3_T_FR_jt_num <- rowSums(data.frame(Case3_T_FR[3], Case3_T_Age_FR[3]))
+Case3_T_UK_jt_num <- rowSums(data.frame(Case3_T_UK[3], Case3_T_Age_UK[3]))
+Case3_T_SAU_jt_num <- rowSums(data.frame(Case3_T_SAU[3], Case3_T_Age_SAU[3]))
+Case3_T_USA_jt_num <- rowSums(data.frame(Case3_T_USA[3], Case3_T_Age_USA[3]))
+
+
+Case3_T_AE_jt <- sort(Case3_T_AE_jt_num / Case3_T_jt_denom)
+median(Case1_T_AE_jt)
+Case3_T_AE_jt[50]
+Case3_T_AE_jt[1958]
+
+Case3_T_BD_jt <- sort(Case3_T_BD_jt_num / Case3_T_jt_denom)
+median(Case3_T_BD_jt)
+Case3_T_BD_jt[50]
+Case3_T_BD_jt[1958]
+
+Case3_T_FR_jt <- sort(Case3_T_FR_jt_num / Case3_T_jt_denom)
+median(Case3_T_FR_jt)
+Case3_T_FR_jt[50]
+Case3_T_FR_jt[1958]
+
+Case3_T_UK_jt <- sort(Case3_T_uk_jt_num / Case3_T_jt_denom)
+median(Case3_T_UK_jt)
+Case3_T_UK_jt[50]
+Case3_T_UK_jt[1958]
+
+Case3_T_SAU_jt <- sort(Case3_T_SAU_jt_num / Case3_T_jt_denom)
+median(Case3_T_SAU_jt)
+Case3_T_SAU_jt[50]
+Case3_T_SAU_jt[1958]
+
+Case3_T_USA_jt <- sort(Case3_T_USA_jt_num / Case3_T_jt_denom)
+median(Case3_T_USA_jt)
+Case3_T_USA_jt[50]
+Case3_T_USA_jt[1958]
+
+
+
+# Joint estimates, global risk period ----
+## Case 1
+Case1_G_jt_denom <- rowSums(
+    data.frame(Case1_G_UK[3], Case1_G_Age_UK[3],
+               Case1_G_SAU[3], Case1_G_Age_SAU[3]))
+
+Case1_G_UK_jt_num <- rowSums(data.frame(Case1_G_UK[3], Case1_G_Age_UK[3]))
+Case1_G_SAU_jt_num <- rowSums(data.frame(Case1_G_SAU[3], Case1_G_Age_SAU[3]))
+
+Case1_G_UK_jt <- sort(Case1_G_UK_jt_num / Case1_G_jt_denom)
+median(Case1_G_UK_jt)
+Case1_G_UK_jt[50]
+Case1_G_UK_jt[1958]
+
+Case1_G_SAU_jt <- sort(Case1_G_SAU_jt_num / Case1_G_jt_denom)
+median(Case1_G_SAU_jt)
+Case1_G_SAU_jt[50]
+Case1_G_SAU_jt[1958]
+
+## Case 2
+Case2_G_jt_denom <- rowSums( 
+    data.frame(Case2_G_SAU, Case2_G_Age_SAU
+               Case2_G_USA, Case2_G_Age_USA))
+
+Case2_G_SAU_jt_num <- rowSums(data.frame(Case2_G_SAU[3], Case2_G_Age_SAU[3]))
+Case2_G_USA_jt_num <- rowSums(data.frame(Case2_G_USA[3], Case2_G_Age_USA[3]))
+
+Case2_G_SAU_jt <- sort(Case2_G_SAU_jt_num / Case2_G_jt_denom)
+median(Case2_G_SAU_jt)
+Case2_G_SAU_jt[50]
+Case2_G_SAU_jt[1958]
+
+Case2_G_USA_jt <- sort(Case2_G_USA_jt_num / Case2_G_jt_denom)
+median(Case2_G_USA_jt)
+Case2_G_USA_jt[50]
+Case2_G_USA_jt[1958]
+
+## Case 3
+Case3_G_jt_denom <- rowSums( 
+    data.frame(Case3_G_BD, Case3_G_Age_BD
+               Case3_G_UK, Case3_G_Age_UK,
+               Case3_G_SAU, Case3_G_Age_SAU))
+
+Case3_G_BD_jt_num <- rowSums(data.frame(Case3_G_BD[3], Case3_G_Age_BD[3]))
+Case3_G_UK_jt_num <- rowSums(data.frame(Case3_G_UK[3], Case3_G_Age_UK[3]))
+Case3_G_SAU_jt_num <- rowSums(data.frame(Case3_G_SAU[3], Case3_G_Age_SAU[3]))
+Case3_G_USA_jt_num <- rowSums(data.frame(Case3_G_USA[3], Case3_G_Age_USA[3]))
+
+
+Case3_G_AE_jt <- sort(Case3_G_AE_jt_num / Case3_G_jt_denom)
+median(Case1_G_AE_jt)
+Case3_G_AE_jt[50]
+Case3_G_AE_jt[1958]
+
+Case3_G_BD_jt <- sort(Case3_G_BD_jt_num / Case3_G_jt_denom)
+median(Case3_G_BD_jt)
+Case3_G_BD_jt[50]
+Case3_G_BD_jt[1958]
+
+Case3_G_FR_jt <- sort(Case3_G_FR_jt_num / Case3_G_jt_denom)
+median(Case3_G_FR_jt)
+Case3_G_FR_jt[50]
+Case3_G_FR_jt[1958]
