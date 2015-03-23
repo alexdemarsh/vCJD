@@ -70,6 +70,213 @@ prob.mult <- function (num.ranges, ranges, data) {
     CrI[1] <- sorted.pr[50]
     CrI[2] <- sorted.pr[1958]    
     return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+# Function to compute probability and CI ----
+prob <- function (end, start, data) {
+    pr <- vector("numeric", nrow(data))
+    for (i in 1:nrow(data)) {
+        row <- data[i,]
+        pr[[i]] <- pgamma(q = end, shape = row$shape, scale= row$scale) - pgamma(q = start, shape = row$shape, scale = row$scale)
+    }
+    sorted.pr <- sort(pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- pr[50]
+    CrI[2] <- pr[1958]
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+}
+
+# Incubation period only, ungrouped ----
+## Case 1 ---
+Case1_SAU1 <- prob(4.5, 0.0001, incub)
+Case1_USA <- prob(5.5, 4.5, incub)
+Case1_SAU2 <- prob(32, 5.5, incub)
+
+## Case 2 ---
+Case2_USA <- prob(0.06, 0, incub)
+Case2_EGY <- prob(7.2, 0.6, incub)
+Case2_SAU <- prob(22.8, 7.2, incub)
+
+## Case 3 ---
+Case3_ARE1 <- prob(0.4, 0.0001, incub)
+Case3_USA <- prob(2.6, 0.4, incub)
+Case3_BGD <- prob(6.6, 2.6, incub)
+Case3_ARE2 <- prob(10.6, 6.6, incub)
+Case3_SAU <- prob(23, 10.6, incub)
+
+# Age only, ungrouped ----
+## Case 1 ---
+Case1_Age_SAU1 <- prob(32.5, 28.3, age)
+Case1_Age_USA <- prob(28.3, 27.25, age)
+Case1_Age_SAU2 <- prob(27.25, 0.0001, age)
+
+## Case 2 ---
+Case2_Age_USA <- prob(22.8, 22.5, age)
+Case2_Age_EGY <- prob(22.5, 16, age)
+Case2_Age_SAU <- prob(16, 0.0001, age)
+
+## Case 3 ---
+Case3_Age_ARE1 <- prob(23, 22.6, age)
+Case3_Age_USA <- prob(22.6, 20.4, age)
+Case3_Age_BGD <- prob(20.4, 16.4, age)
+Case3_Age_ARE2 <- prob(16.4, 12.4, age)
+Case3_Age_SAU <- prob(12.4, 0.0001, age)
+
+
+# Function to compute probability and CI when multiple periods covered----
+prob.mult <- function (num.ranges, ranges, data) {
+    tot.pr <- matrix(nrow = nrow(data), ncol = num.ranges)
+    for (i in 1:num.ranges){
+        pr <- vector("numeric", nrow(data))
+        for (j in 1:nrow(data)) {
+            row <- data[j,]
+            pr[[j]] <- pgamma(q = ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }
+        tot.pr[,i] <- pr
+    }
+    sorted.pr <- sort(rowSums(tot.pr))
+    print(sorted.pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- sorted.pr[50]
+    CrI[2] <- sorted.pr[1958]    
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+# Function to compute probability and CI ----
+prob <- function (end, start, data) {
+    pr <- vector("numeric", nrow(data))
+    for (i in 1:nrow(data)) {
+        row <- data[i,]
+        pr[[i]] <- pgamma(q = end, shape = row$shape, scale= row$scale) - pgamma(q = start, shape = row$shape, scale = row$scale)
+    }
+    sorted.pr <- sort(pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- pr[50]
+    CrI[2] <- pr[1958]
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+}
+
+# Incubation period only, ungrouped ----
+## Case 1 ---
+Case1_SAU1 <- prob(4.5, 0.0001, incub)
+Case1_USA <- prob(5.5, 4.5, incub)
+Case1_SAU2 <- prob(32, 5.5, incub)
+
+## Case 2 ---
+Case2_USA <- prob(0.06, 0, incub)
+Case2_EGY <- prob(7.2, 0.6, incub)
+Case2_SAU <- prob(22.8, 7.2, incub)
+
+## Case 3 ---
+Case3_ARE1 <- prob(0.4, 0.0001, incub)
+Case3_USA <- prob(2.6, 0.4, incub)
+Case3_BGD <- prob(6.6, 2.6, incub)
+Case3_ARE2 <- prob(10.6, 6.6, incub)
+Case3_SAU <- prob(23, 10.6, incub)
+
+# Age only, ungrouped ----
+## Case 1 ---
+Case1_Age_SAU1 <- prob(32.5, 28.3, age)
+Case1_Age_USA <- prob(28.3, 27.25, age)
+Case1_Age_SAU2 <- prob(27.25, 0.0001, age)
+
+## Case 2 ---
+Case2_Age_USA <- prob(22.8, 22.5, age)
+Case2_Age_EGY <- prob(22.5, 16, age)
+Case2_Age_SAU <- prob(16, 0.0001, age)
+
+## Case 3 ---
+Case3_Age_ARE1 <- prob(23, 22.6, age)
+Case3_Age_USA <- prob(22.6, 20.4, age)
+Case3_Age_BGD <- prob(20.4, 16.4, age)
+Case3_Age_ARE2 <- prob(16.4, 12.4, age)
+Case3_Age_SAU <- prob(12.4, 0.0001, age)
+
+
+# Function to compute probability and CI when multiple periods covered----
+prob.mult <- function (num.ranges, ranges, data) {
+    tot.pr <- matrix(nrow = nrow(data), ncol = num.ranges)
+    for (i in 1:num.ranges){
+        pr <- vector("numeric", nrow(data))
+        for (j in 1:nrow(data)) {
+            row <- data[j,]
+            pr[[j]] <- pgamma(q = ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }
+        tot.pr[,i] <- pr
+    }
+    sorted.pr <- sort(rowSums(tot.pr))
+    print(sorted.pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- sorted.pr[50]
+    CrI[2] <- sorted.pr[1958]    
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+# Function to compute probability and CI ----
+prob <- function (end, start, data) {
+    pr <- vector("numeric", nrow(data))
+    for (i in 1:nrow(data)) {
+        row <- data[i,]
+        pr[[i]] <- pgamma(q = end, shape = row$shape, scale= row$scale) - pgamma(q = start, shape = row$shape, scale = row$scale)
+    }
+    sorted.pr <- sort(pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- pr[50]
+    CrI[2] <- pr[1958]
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
+}
+
+# Incubation period only, ungrouped ----
+## Case 1 ---
+Case1_SAU1 <- prob(4.5, 0.0001, incub)
+Case1_USA <- prob(5.5, 4.5, incub)
+Case1_SAU2 <- prob(32, 5.5, incub)
+
+## Case 2 ---
+Case2_USA <- prob(0.06, 0, incub)
+Case2_EGY <- prob(7.2, 0.6, incub)
+Case2_SAU <- prob(22.8, 7.2, incub)
+
+## Case 3 ---
+Case3_ARE1 <- prob(0.4, 0.0001, incub)
+Case3_USA <- prob(2.6, 0.4, incub)
+Case3_BGD <- prob(6.6, 2.6, incub)
+Case3_ARE2 <- prob(10.6, 6.6, incub)
+Case3_SAU <- prob(23, 10.6, incub)
+
+# Age only, ungrouped ----
+## Case 1 ---
+Case1_Age_SAU1 <- prob(32.5, 28.3, age)
+Case1_Age_USA <- prob(28.3, 27.25, age)
+Case1_Age_SAU2 <- prob(27.25, 0.0001, age)
+
+## Case 2 ---
+Case2_Age_USA <- prob(22.8, 22.5, age)
+Case2_Age_EGY <- prob(22.5, 16, age)
+Case2_Age_SAU <- prob(16, 0.0001, age)
+
+## Case 3 ---
+Case3_Age_ARE1 <- prob(23, 22.6, age)
+Case3_Age_USA <- prob(22.6, 20.4, age)
+Case3_Age_BGD <- prob(20.4, 16.4, age)
+Case3_Age_ARE2 <- prob(16.4, 12.4, age)
+Case3_Age_SAU <- prob(12.4, 0.0001, age)
+
+
+# Function to compute probability and CI when multiple periods covered----
+prob.mult <- function (num.ranges, ranges, data) {
+    tot.pr <- matrix(nrow = nrow(data), ncol = num.ranges)
+    for (i in 1:num.ranges){
+        pr <- vector("numeric", nrow(data))
+        for (j in 1:nrow(data)) {
+            row <- data[j,]
+            pr[[j]] <- pgamma(q = ranges[[i]][1], shape = row$shape, scale= row$scale) - 
+                pgamma(q = ranges[[i]][2], shape = row$shape, scale = row$scale)
+        }
+        tot.pr[,i] <- pr
+    }
+    sorted.pr <- sort(rowSums(tot.pr))
+    print(sorted.pr)
+    CrI <- vector ("numeric", 2)
+    CrI[1] <- sorted.pr[50]
+    CrI[2] <- sorted.pr[1958]    
+    return(list(median = median(sorted.pr), CrI = CrI, vector = sorted.pr))
 }
 
 # Function to compute probability and CI when multiple periods with travel ----
