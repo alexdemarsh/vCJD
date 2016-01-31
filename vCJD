@@ -1,5 +1,5 @@
-incub <- read.table("C:\\Users\\ADEMARSH\\Dropbox\\Work\\vCJD\\Baseline-results-subset.csv", header=T, sep = ",")
-age <- read.table("C:\\Users\\ADEMARSH\\Dropbox\\Work\\vCJD\\age-subset.csv", header=T, sep = ",")
+incub <- read.table("incubation-data.csv", header=T, sep = ",")
+age <- read.table("age-data.csv", header=T, sep = ",")
 
 # Function to compute probability and CI ----
 prob <- function (end, start, data) {
